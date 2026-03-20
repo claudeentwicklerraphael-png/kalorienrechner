@@ -34,12 +34,12 @@ export const PROTEIN_FAKTOREN: Record<Proteinquelle, number> = {
 };
 
 export const DEFAULT_INPUTS: CalculatorInputs = {
-  alter: 30,
-  koerpergroesse: 1.8,
-  gewicht: 85,
+  alter: 0,
+  koerpergroesse: 0,
+  gewicht: 0,
   aktivitaetsfaktor: 1.55,
   defizitfaktor: 0.85,
-  zielgewicht: 78,
+  zielgewicht: 0,
   proteinquelle: 'fleisch',
 };
 

@@ -166,30 +166,55 @@ function MetricCard({
   );
 }
 
+// ── Defizit-Optionen ──────────────────────────────────────────────────────────
+
+const DEFIZIT_OPTIONEN = [
+  { value: 1.0,  label: '0 % Defizit – Erhaltung' },
+  { value: 0.95, label: '5 % Defizit' },
+  { value: 0.9,  label: '10 % Defizit' },
+  { value: 0.85, label: '15 % Defizit (empfohlen)' },
+  { value: 0.8,  label: '20 % Defizit' },
+  { value: 0.75, label: '25 % Defizit' },
+  { value: 0.7,  label: '30 % Defizit' },
+  { value: 0.65, label: '35 % Defizit' },
+  { value: 0.6,  label: '40 % Defizit' },
+  { value: 0.55, label: '45 % Defizit' },
+  { value: 0.5,  label: '50 % Defizit (extrem)' },
+];
+
 // ── Haupt-Komponente ──────────────────────────────────────────────────────────
 
 export default function Calculator() {
-  const [inputs, setInputs] = useState<CalculatorInputs>(DEFAULT_INPUTS);
+  // Freitextfelder als String gespeichert → keine Probleme bei Dezimaleingabe
+  const [raw, setRaw] = useState({ alter: '', koerpergroesse: '', gewicht: '', zielgewicht: '' });
+  const [aktivitaetsfaktor, setAktivitaetsfaktorVal] = useState(1.55);
+  const [defizitfaktor, setDefizitfaktorVal] = useState(0.85);
+  const [proteinquelle, setProteinquelleVal] = useState<Proteinquelle>('fleisch');
 
-  const setNumber =
-    (field: keyof Omit<CalculatorInputs, 'proteinquelle'>) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const v = parseFloat(e.target.value);
-      setInputs((prev) => ({ ...prev, [field]: isNaN(v) ? 0 : v }));
-    };
+  const setRawField = (field: keyof typeof raw) => (e: React.ChangeEvent<HTMLInputElement>) =>
+    setRaw((prev) => ({ ...prev, [field]: e.target.value }));
 
-  const setProteinquelle = (e: React.ChangeEvent<HTMLSelectElement>) =>
-    setInputs((prev) => ({ ...prev, proteinquelle: e.target.value as Proteinquelle }));
+  const resetDefaults = () => {
+    setRaw({ alter: '', koerpergroesse: '', gewicht: '', zielgewicht: '' });
+    setAktivitaetsfaktorVal(1.55);
+    setDefizitfaktorVal(0.85);
+    setProteinquelleVal('fleisch');
+  };
 
-  const setAktivitaet = (e: React.ChangeEvent<HTMLSelectElement>) =>
-    setInputs((prev) => ({ ...prev, aktivitaetsfaktor: parseFloat(e.target.value) }));
-
-  const resetDefaults = () => setInputs(DEFAULT_INPUTS);
+  const inputs: CalculatorInputs = {
+    alter: parseFloat(raw.alter) || 0,
+    koerpergroesse: parseFloat(raw.koerpergroesse) || 0,
+    gewicht: parseFloat(raw.gewicht) || 0,
+    zielgewicht: parseFloat(raw.zielgewicht) || 0,
+    aktivitaetsfaktor,
+    defizitfaktor,
+    proteinquelle,
+  };
 
   const errors = validateInputs(inputs);
   const results: CalculatorResults | null = errors.length === 0 ? calculate(inputs) : null;
 
-  const proteinfaktor = PROTEIN_FAKTOREN[inputs.proteinquelle].toFixed(1);
+  const proteinfaktor = PROTEIN_FAKTOREN[proteinquelle].toFixed(1);
 
   return (
     <div>
@@ -209,7 +234,8 @@ export default function Calculator() {
           <InputField label="Alter (Jahre)">
             <input
               type="number" min={1} max={120} step={1}
-              value={inputs.alter || ''} onChange={setNumber('alter')}
+              value={raw.alter} onChange={setRawField('alter')}
+              placeholder="z. B. 30"
               className={inputCls}
             />
           </InputField>
@@ -217,7 +243,8 @@ export default function Calculator() {
           <InputField label="Körpergröße (m)">
             <input
               type="number" min={1.0} max={2.5} step={0.01}
-              value={inputs.koerpergroesse || ''} onChange={setNumber('koerpergroesse')}
+              value={raw.koerpergroesse} onChange={setRawField('koerpergroesse')}
+              placeholder="z. B. 1.80"
               className={inputCls}
             />
           </InputField>
@@ -225,7 +252,8 @@ export default function Calculator() {
           <InputField label="Gewicht (kg)">
             <input
               type="number" min={1} max={500} step={0.5}
-              value={inputs.gewicht || ''} onChange={setNumber('gewicht')}
+              value={raw.gewicht} onChange={setRawField('gewicht')}
+              placeholder="z. B. 85"
               className={inputCls}
             />
           </InputField>
@@ -233,32 +261,45 @@ export default function Calculator() {
           <InputField label="Zielgewicht (kg)">
             <input
               type="number" min={1} max={500} step={0.5}
-              value={inputs.zielgewicht || ''} onChange={setNumber('zielgewicht')}
+              value={raw.zielgewicht} onChange={setRawField('zielgewicht')}
+              placeholder="z. B. 78"
               className={inputCls}
             />
           </InputField>
 
           <InputField label="Aktivitätsfaktor">
-            <select value={inputs.aktivitaetsfaktor} onChange={setAktivitaet} className={inputCls}>
+            <select
+              value={aktivitaetsfaktor}
+              onChange={(e) => setAktivitaetsfaktorVal(parseFloat(e.target.value))}
+              className={inputCls}
+            >
               {AKTIVITAET_OPTIONEN.map((opt) => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
             </select>
           </InputField>
 
-          <InputField label="Defizitfaktor" hint="0,7 = 70 % des Erhaltungsbedarfs">
-            <input
-              type="number" min={0.1} max={2.0} step={0.05}
-              value={inputs.defizitfaktor || ''} onChange={setNumber('defizitfaktor')}
+          <InputField label="Kaloriendefizit" hint="Wie viel % unter deinem Erhaltungsbedarf?">
+            <select
+              value={defizitfaktor}
+              onChange={(e) => setDefizitfaktorVal(parseFloat(e.target.value))}
               className={inputCls}
-            />
+            >
+              {DEFIZIT_OPTIONEN.map((opt) => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
           </InputField>
 
           <InputField
             label="Proteinquelle"
             hint={`Proteinfaktor: ${proteinfaktor} g pro kg Zielgewicht`}
           >
-            <select value={inputs.proteinquelle} onChange={setProteinquelle} className={inputCls}>
+            <select
+              value={proteinquelle}
+              onChange={(e) => setProteinquelleVal(e.target.value as Proteinquelle)}
+              className={inputCls}
+            >
               <option value="fleisch">Fleisch</option>
               <option value="vegetarisch">Vegetarisch</option>
               <option value="vegan">Vegan</option>
