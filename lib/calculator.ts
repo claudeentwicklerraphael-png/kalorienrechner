@@ -48,7 +48,7 @@ export function validateInputs(inputs: CalculatorInputs): string[] {
   if (!inputs.alter || inputs.alter <= 0 || inputs.alter > 120)
     errors.push('Alter muss zwischen 1 und 120 Jahren liegen.');
   if (!inputs.koerpergroesse || inputs.koerpergroesse < 1.0 || inputs.koerpergroesse > 2.5)
-    errors.push('Körpergröße muss zwischen 1,00 und 2,50 m liegen.');
+    errors.push('Körpergröße muss zwischen 100 und 250 cm liegen.');
   if (!inputs.gewicht || inputs.gewicht <= 0 || inputs.gewicht > 500)
     errors.push('Gewicht muss zwischen 1 und 500 kg liegen.');
   if (!inputs.defizitfaktor || inputs.defizitfaktor <= 0 || inputs.defizitfaktor > 2)

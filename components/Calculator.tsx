@@ -13,9 +13,9 @@ import type { CalculatorInputs, CalculatorResults, Proteinquelle } from '@/lib/c
 
 const AKTIVITAET_OPTIONEN = [
   { value: 1.2, label: '1,2 – Kaum Bewegung' },
-  { value: 1.375, label: '1,375 – Leicht aktiv (1–3× Sport/Woche)' },
-  { value: 1.55, label: '1,55 – Moderat aktiv (3–5× Sport/Woche)' },
-  { value: 1.725, label: '1,725 – Sehr aktiv (6–7× Sport/Woche)' },
+  { value: 1.4, label: '1,4 – Leicht aktiv (1–3× Sport/Woche)' },
+  { value: 1.6, label: '1,6 – Moderat aktiv (3–5× Sport/Woche)' },
+  { value: 1.7, label: '1,7 – Sehr aktiv (6–7× Sport/Woche)' },
   { value: 1.9, label: '1,9 – Extrem aktiv' },
 ];
 
@@ -186,8 +186,8 @@ const DEFIZIT_OPTIONEN = [
 
 export default function Calculator() {
   // Freitextfelder als String gespeichert → keine Probleme bei Dezimaleingabe
-  const [raw, setRaw] = useState({ alter: '', koerpergroesse: '', gewicht: '', zielgewicht: '' });
-  const [aktivitaetsfaktor, setAktivitaetsfaktorVal] = useState(1.55);
+  const [raw, setRaw] = useState({ alter: '30', koerpergroesse: '180', gewicht: '85', zielgewicht: '78' });
+  const [aktivitaetsfaktor, setAktivitaetsfaktorVal] = useState(1.6);
   const [defizitfaktor, setDefizitfaktorVal] = useState(0.85);
   const [proteinquelle, setProteinquelleVal] = useState<Proteinquelle>('fleisch');
 
@@ -195,7 +195,7 @@ export default function Calculator() {
     setRaw((prev) => ({ ...prev, [field]: e.target.value }));
 
   const resetDefaults = () => {
-    setRaw({ alter: '', koerpergroesse: '', gewicht: '', zielgewicht: '' });
+    setRaw({ alter: '30', koerpergroesse: '180', gewicht: '85', zielgewicht: '78' });
     setAktivitaetsfaktorVal(1.55);
     setDefizitfaktorVal(0.85);
     setProteinquelleVal('fleisch');
@@ -203,7 +203,7 @@ export default function Calculator() {
 
   const inputs: CalculatorInputs = {
     alter: parseFloat(raw.alter) || 0,
-    koerpergroesse: parseFloat(raw.koerpergroesse) || 0,
+    koerpergroesse: (parseFloat(raw.koerpergroesse) || 0) / 100,
     gewicht: parseFloat(raw.gewicht) || 0,
     zielgewicht: parseFloat(raw.zielgewicht) || 0,
     aktivitaetsfaktor,
@@ -240,11 +240,11 @@ export default function Calculator() {
             />
           </InputField>
 
-          <InputField label="Körpergröße (m)">
+          <InputField label="Körpergröße (cm)">
             <input
-              type="number" min={1.0} max={2.5} step={0.01}
+              type="number" min={100} max={250} step={1}
               value={raw.koerpergroesse} onChange={setRawField('koerpergroesse')}
-              placeholder="z. B. 1.80"
+              placeholder="z. B. 180"
               className={inputCls}
             />
           </InputField>
