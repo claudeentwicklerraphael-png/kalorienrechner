@@ -33,7 +33,7 @@ function fmtPct(value: number): string {
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-xs font-semibold tracking-widest uppercase text-orange-500 mb-3 mt-8 first:mt-0">
+    <p className="text-xs font-semibold tracking-widest uppercase text-blue-400 mb-3 mt-8 first:mt-0">
       {children}
     </p>
   );
@@ -61,7 +61,7 @@ function InputField({
 
 const inputCls =
   'w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-zinc-100 text-sm font-medium ' +
-  'focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent focus:bg-zinc-750 transition-all';
+  'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-zinc-750 transition-all';
 
 /** Dreifarbiger gestapelter Balken für die Makroverteilung */
 function MacroBar({
@@ -84,7 +84,7 @@ function MacroBar({
         title={`Protein ${p.toFixed(1)} %`}
       />
       <div
-        className="bg-orange-500 transition-all duration-500"
+        className="bg-blue-500 transition-all duration-500"
         style={{ width: `${f}%` }}
         title={`Fett ${f.toFixed(1)} %`}
       />
@@ -148,12 +148,12 @@ function MetricCard({
 }) {
   if (accent) {
     return (
-      <div className="bg-gradient-to-br from-red-700 via-orange-600 to-amber-500 rounded-2xl p-6 shadow-md shadow-red-950">
-        <p className="text-xs font-semibold tracking-widest uppercase text-orange-100 mb-2">
+      <div className="bg-gradient-to-br from-blue-800 via-blue-600 to-blue-500 rounded-2xl p-6 shadow-md shadow-blue-950">
+        <p className="text-xs font-semibold tracking-widest uppercase text-blue-100 mb-2">
           {label}
         </p>
         <p className="text-5xl font-bold text-white">{value}</p>
-        <p className="text-sm text-orange-200 mt-1">{unit}</p>
+        <p className="text-sm text-blue-200 mt-1">{unit}</p>
       </div>
     );
   }
@@ -227,7 +227,7 @@ export default function Calculator() {
           <h2 className="text-base font-semibold text-zinc-100">Deine Daten</h2>
           <button
             onClick={resetDefaults}
-            className="text-xs font-medium text-zinc-500 hover:text-orange-400 transition-colors"
+            className="text-xs font-medium text-zinc-500 hover:text-blue-400 transition-colors"
           >
             Zurücksetzen
           </button>
@@ -366,7 +366,7 @@ export default function Calculator() {
                 Protein
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-orange-500 inline-block" />
+                <span className="w-3 h-3 rounded-full bg-blue-500 inline-block" />
                 Fett
               </span>
               <span className="flex items-center gap-1.5">
@@ -400,7 +400,7 @@ export default function Calculator() {
               kcal={results.zielFettKcal}
               gramm={results.zielFettGramm}
               pct={results.fettProzent}
-              color="bg-orange-500"
+              color="bg-blue-500"
             />
             <MacroCard
               label="Kohlenhydrate"
