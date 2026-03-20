@@ -1,4 +1,5 @@
 export type Proteinquelle = 'fleisch' | 'vegetarisch' | 'vegan';
+export type Geschlecht = 'mann' | 'frau';
 
 export interface CalculatorInputs {
   alter: number;
@@ -8,6 +9,7 @@ export interface CalculatorInputs {
   defizitfaktor: number;
   zielgewicht: number;
   proteinquelle: Proteinquelle;
+  geschlecht: Geschlecht;
 }
 
 export interface CalculatorResults {
@@ -41,6 +43,7 @@ export const DEFAULT_INPUTS: CalculatorInputs = {
   defizitfaktor: 0.85,
   zielgewicht: 0,
   proteinquelle: 'fleisch',
+  geschlecht: 'mann',
 };
 
 export function validateInputs(inputs: CalculatorInputs): string[] {
@@ -67,11 +70,13 @@ export function calculate(inputs: CalculatorInputs): CalculatorResults {
     defizitfaktor,
     zielgewicht,
     proteinquelle,
+    geschlecht,
   } = inputs;
 
-  // 1. Grundumsatz
+  // 1. Grundumsatz (Männer: +220.827, Frauen: +29.79)
+  const grundumsatzKonstante = geschlecht === 'frau' ? 29.79 : 220.827;
   const grundumsatz =
-    11.936 * gewicht + 587.728 * koerpergroesse - 8.129 * alter + 220.827;
+    11.936 * gewicht + 587.728 * koerpergroesse - 8.129 * alter + grundumsatzKonstante;
 
   // 2. TDEE
   const tdee = grundumsatz * aktivitaetsfaktor;
@@ -84,8 +89,9 @@ export function calculate(inputs: CalculatorInputs): CalculatorResults {
   const proteinGrammProTag = zielgewicht * proteinFaktor;
   const proteinKcalProTag = proteinGrammProTag * 4.1;
 
-  // 5. Angestrebte Fettzufuhr
-  const zielFettKcal = kalorienziel * 0.25;
+  // 5. Angestrebte Fettzufuhr (Männer: 25%, Frauen: 30%)
+  const fettAnteil = geschlecht === 'frau' ? 0.30 : 0.25;
+  const zielFettKcal = kalorienziel * fettAnteil;
   const zielFettGramm = zielFettKcal / 9.3;
 
   // 7. Kohlenhydrate

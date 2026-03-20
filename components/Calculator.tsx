@@ -7,7 +7,7 @@ import {
   DEFAULT_INPUTS,
   PROTEIN_FAKTOREN,
 } from '@/lib/calculator';
-import type { CalculatorInputs, CalculatorResults, Proteinquelle } from '@/lib/calculator';
+import type { CalculatorInputs, CalculatorResults, Proteinquelle, Geschlecht } from '@/lib/calculator';
 
 // ── Daten ─────────────────────────────────────────────────────────────────────
 
@@ -190,6 +190,7 @@ export default function Calculator() {
   const [aktivitaetsfaktor, setAktivitaetsfaktorVal] = useState(1.6);
   const [defizitfaktor, setDefizitfaktorVal] = useState(0.85);
   const [proteinquelle, setProteinquelleVal] = useState<Proteinquelle>('fleisch');
+  const [geschlecht, setGeschlechtVal] = useState<Geschlecht>('mann');
 
   const setRawField = (field: keyof typeof raw) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setRaw((prev) => ({ ...prev, [field]: e.target.value }));
@@ -199,6 +200,7 @@ export default function Calculator() {
     setAktivitaetsfaktorVal(1.55);
     setDefizitfaktorVal(0.85);
     setProteinquelleVal('fleisch');
+    setGeschlechtVal('mann');
   };
 
   const inputs: CalculatorInputs = {
@@ -209,6 +211,7 @@ export default function Calculator() {
     aktivitaetsfaktor,
     defizitfaktor,
     proteinquelle,
+    geschlecht,
   };
 
   const errors = validateInputs(inputs);
@@ -231,6 +234,17 @@ export default function Calculator() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
+          <InputField label="Geschlecht">
+            <select
+              value={geschlecht}
+              onChange={(e) => setGeschlechtVal(e.target.value as Geschlecht)}
+              className={inputCls}
+            >
+              <option value="mann">Männlich</option>
+              <option value="frau">Weiblich</option>
+            </select>
+          </InputField>
+
           <InputField label="Alter (Jahre)">
             <input
               type="number" min={1} max={120} step={1}
