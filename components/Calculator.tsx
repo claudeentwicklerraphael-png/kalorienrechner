@@ -84,12 +84,12 @@ function MacroBar({
         title={`Protein ${p.toFixed(1)} %`}
       />
       <div
-        className="bg-amber-400 transition-all duration-500"
+        className="bg-orange-500 transition-all duration-500"
         style={{ width: `${f}%` }}
         title={`Fett ${f.toFixed(1)} %`}
       />
       <div
-        className="bg-yellow-400 transition-all duration-500"
+        className="bg-yellow-300 transition-all duration-500"
         style={{ width: `${k}%` }}
         title={`Kohlenhydrate ${k.toFixed(1)} %`}
       />
@@ -311,11 +311,11 @@ export default function Calculator() {
                 Protein
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-amber-400 inline-block" />
+                <span className="w-3 h-3 rounded-full bg-orange-500 inline-block" />
                 Fett
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-yellow-400 inline-block" />
+                <span className="w-3 h-3 rounded-full bg-yellow-300 inline-block" />
                 Kohlenhydrate
               </span>
             </div>
@@ -345,14 +345,14 @@ export default function Calculator() {
               kcal={results.zielFettKcal}
               gramm={results.zielFettGramm}
               pct={results.fettProzent}
-              color="bg-amber-400"
+              color="bg-orange-500"
             />
             <MacroCard
               label="Kohlenhydrate"
               kcal={results.kohlenhydrateKcal}
               gramm={results.kohlenhydrateGramm}
               pct={results.kohlenhydrateProzent}
-              color={results.kohlenhydrateNegativ ? 'bg-red-600' : 'bg-yellow-400'}
+              color={results.kohlenhydrateNegativ ? 'bg-red-600' : 'bg-yellow-300'}
               warn={results.kohlenhydrateNegativ}
             />
           </div>

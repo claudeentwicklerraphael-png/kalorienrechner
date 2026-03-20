@@ -3,7 +3,7 @@ import Calculator from '@/components/Calculator';
 export default function Home() {
   return (
     <div className="min-h-screen bg-zinc-950">
-      <header className="relative bg-gradient-to-br from-red-800 via-orange-700 to-amber-600 px-4 py-14 overflow-hidden">
+      <header className="relative bg-gradient-to-br from-red-800 via-orange-700 to-amber-600 px-4 py-14">
         {/* Flammen-Hintergrund */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute bottom-0 left-1/4 w-32 h-40 bg-yellow-300 rounded-full blur-3xl" />
@@ -21,7 +21,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 -mt-6 pb-16">
+      <main className="relative z-10 max-w-4xl mx-auto px-4 -mt-6 pb-16">
         <Calculator />
       </main>
 
